@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=Bebas+Neue&family=Kablammo&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+      }
+      body {
+        width: 100%;
+        height: 100vh;
+        display: flex;
+        background: yellow;
+      }
+      .a1 {
+        width: 200px;
+        height: 280px;
+        text-align: center;
+        border: 4px solid #6be8e2;
+        font-size: 20px;
+        font-family: "Bagel Fat One", "Kablammo", "Bebas Neue", cursive;
+        position: absolute;
+        top: 50%;
+        right: 2%;
+        padding: 13px;
+        border-radius: 4px;
+      }
+      .a1::after {
+        content: "";
+        position: absolute;
+        bottom: -6px;
+        right: -6px;
+        width: 100%;
+        height: 100%;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        z-index: -1;
+      }
+      h1 {
+        position: absolute;
+        top: 3%;
+        left: 20%;
+        font-size: 80px;
+        font-family: "Bagel Fat One", "Kablammo", "Bebas Neue", cursive;
+        color: #6be8e2;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5),
+          -2px -2px 4px rgba(255, 255, 255, 0.5);
+      }
+      .aa h1 {
+        top: 2.7%;
+        left: 20.3%;
+        font-size: 80px;
+        position: absolute;
+        z-index: -1;
+        font-family: "Bagel Fat One", "Kablammo", "Bebas Neue", cursive;
+        color: #000;
+      }
+
+      #btn-start {
+        font-family: "Bagel Fat One", "Kablammo", "Bebas Neue", cursive;
+        transform: scale(2);
+        position: absolute;
+        width: 85%;
+        top: 75%;
+        right: 6%;
+        display: inline-block;
+        padding: 10px 20px;
+        font-size: 24px;
+        font-weight: bold;
+        text-align: center;
+        text-decoration: none;
+        color: #000;
+        background-color: #6be8e2;
+        border: none;
+        border-radius: 4px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        transform: translate3d(0, 0, 0);
+        transition: transform 0.3s;
+      }
+
+      #btn-start:hover {
+        transform: translate3d(0, -5px, 0);
+        box-shadow: 0 8px 10px rgba(0, 0, 0, 0.5);
+      }
+
+      #btn-start:active {
+        transform: translate3d(0, 0, 0);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+      }
+      #game {
+        width: 70%;
+        height: 70vh;
+        background: url(./images/bk.jpg);
+        overflow: hidden;
+        position: absolute;
+        top: 55%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        cursor: url(./images/未命名-1.png) 50 50, auto !important;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+      }
+
+      #game > img {
+        height: 300px;
+        position: absolute;
+        user-select: none;
+        -webkit-user-drag: none;
+      }
+      .blood {
+        pointer-events: none;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>
+      Happy &nbsp;&nbsp;Cat's&nbsp;&nbsp; Banana&nbsp;&nbsp;
+      Paradise&nbsp;&nbsp;
+    </h1>
+    <div class="aa">
+      <h1>
+        Happy &nbsp;&nbsp;Cat's&nbsp;&nbsp; Banana&nbsp;&nbsp;
+        Paradise&nbsp;&nbsp;
+      </h1>
+    </div>
+    <br />
+    <div class="a1">
+      <p>Current Score: <span id="text-score">0</span></p>
+      <p>Remaining: <span id="text-time">0</span>seconds</p>
+      <p>Top Player: <span id="text-highscorename">Happy Cat</span></p>
+      <p>Top Score: <span id="text-highscore">0</span></p>
+      <input type="button" value="Open fire!" id="btn-start" />
+    </div>
+
+    <div id="game"></div>
+    <audio id="click-sound">
+      <source src="./686351__rangerrich68__gunshot.mp3" type="audio/mpeg" />
+      Your browser does not support the audio element.
+    </audio>
+    <audio src="./happy happy happy cat concert.mp3" autoplay></audio>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"
+      integrity="sha512-pumBsjNRGGqkPzKHndZMaAG+bir374sORyzM3uulLV14lN5LyykqNk8eEeUlUkB3U0M4FApyaHraT65ihJhDpQ=="
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+      Swal.fire({
+        icon: "info",
+        title: "Time's up!",
+      });
+      // 分數
+      let score = 0;
+      // 剩餘秒數
+      let countdown = 0;
+      // 計時器
+      let timer = 0;
+      // 最高分
+      const highscore = localStorage.zombie
+        ? JSON.parse(localStorage.zombie)
+        : { name: "No one", score: 0 };
+      $("#text-highscorename").text(highscore.name);
+      $("#text-highscore").text(highscore.score);
+
+      $("#btn-start").click(function () {
+        // 停用開始按鈕
+        $(this).attr("disabled", true);
+        // 重設
+        score = 0;
+        $("#text-score").text(score);
+        countdown = 30;
+        $("#text-time").text(countdown);
+        // 開始遊戲
+        timer = setInterval(function () {
+          // 倒數
+          countdown--;
+          $("#text-time").text(countdown);
+          // 隨機 1~10
+          const random = Math.ceil(Math.random() * 10);
+          // 如果隨機數字 > 5 且場上不超過 5 個才產生
+          if (random > 5 && $(".zombie").length < 5) {
+            // 隨機位置
+            const top = Math.round(Math.random() * 100) + "%";
+            const left = Math.round(Math.random() * 100) + "%";
+            // 產生
+            const zombie = $(
+              `<img src="./images/banana-crying-cat.gif" class="zombie" style="top: ${top}; left: ${left}">`
+            );
+            $("#game").append(zombie);
+            move(zombie);
+          }
+          // 時間到
+          if (countdown === 0) {
+            clearInterval(timer);
+            // 遊戲區域清空
+            $("#game").html("");
+            // 重新啟用開始按鈕
+            // 這裡因為 setInterval 用 function 所以 this 會指到 Window
+            // 所以用 $('#btn-start')
+            $("#btn-start").attr("disabled", false);
+
+            if (score > highscore.score) {
+              Swal.fire({
+                icon: "info",
+                title: "Time's up!",
+                text: `Highest score, you got it ${score} Score`,
+                input: "text",
+                inputPlaceholder: "Enter player name",
+                inputAttributes: {
+                  required: true,
+                },
+                validationMessage: "Name is required",
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+              }).then(function (result) {
+                highscore.name = result.value;
+                highscore.score = score;
+                $("#text-highscorename").text(highscore.name);
+                $("#text-highscore").text(highscore.score);
+
+                localStorage.zombie = JSON.stringify(highscore);
+              });
+            } else {
+              Swal.fire({
+                icon: "info",
+                title: "Time's up!",
+                text: `you got it ${score} Score`,
+              });
+            }
+          }
+        }, 1000);
+      });
+
+      function move(zombie) {
+        // 隨機位置
+        const top = Math.round(Math.random() * 100) + "%";
+        const left = Math.round(Math.random() * 100) + "%";
+        zombie.animate({ top, left }, 2000, function () {
+          move(zombie);
+        });
+      }
+
+      $("#game").on("click", ".zombie", function () {
+        $(this).attr("src", "./images/Health-Benefits-of-Banana-Juice.png");
+        $(this).removeClass("zombie").addClass("blood");
+        $(this).stop();
+        score++;
+        $("#text-score").text(score);
+      });
+
+      var clickSound = document.getElementById("click-sound");
+
+      document.addEventListener("click", function () {
+        clickSound.currentTime = 0;
+        clickSound.play();
+      });
+    </script>
+  </body>
+</html>
